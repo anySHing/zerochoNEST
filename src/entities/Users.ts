@@ -17,10 +17,15 @@ import { DMs } from './DMs';
 import { Mentions } from './Mentions';
 import { WorkspaceMembers } from './WorkspaceMembers';
 import { Workspaces } from './Workspaces';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Index('email', ['email'], { unique: true })
-@Entity({ schema: 'sleact', name: 'users' })
+@Index('idx_users_email', ['email'], { unique: true })
+@Entity({ schema: 'public', name: 'users' })
 export class Users {
+  @ApiProperty({
+    example: 1,
+    description: '사용자 아이디',
+  })
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 

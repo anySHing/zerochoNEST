@@ -9,11 +9,23 @@ import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ChannelChats } from './entities/ChannelChats';
+import { ChannelMembers } from './entities/ChannelMembers';
+import { Channels } from './entities/Channels';
+import { DMs } from './entities/DMs';
+import { Mentions } from './entities/Mentions';
+import { Users } from './entities/Users';
+import { WorkspaceMembers } from './entities/WorkspaceMembers';
+import { Workspaces } from './entities/Workspaces';
 
 @Module({
   // forRoot, forFeature, register 등등이 붙는 것들은 파라미터 내부에 설정을 넣어주는 것이라고 보면 됨.
   imports: [
-    ConfigModule.forRoot({ isGlobal: true /*  load: getEnv */ }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      /*,  load: getEnv */
+      envFilePath: '.env.development',
+    }),
     UsersModule,
     WorkspacesModule,
     ChannelsModule,
@@ -25,7 +37,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      entities: [
+        ChannelChats,
+        ChannelMembers,
+        Channels,
+        DMs,
+        Mentions,
+        Users,
+        WorkspaceMembers,
+        Workspaces,
+      ],
       autoLoadEntities: true,
       synchronize: true,
       logging: true,

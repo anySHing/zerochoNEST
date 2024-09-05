@@ -10,8 +10,8 @@ import {
 import { Channels } from './Channels';
 import { Users } from './Users';
 
-@Index('UserId', ['UserId'], {})
-@Entity({ schema: 'sleact', name: 'channelmembers' })
+@Index('idx_channelmembers_userid', ['UserId'], {})
+@Entity({ schema: 'public', name: 'channelmembers' })
 export class ChannelMembers {
   @CreateDateColumn()
   createdAt: Date;
