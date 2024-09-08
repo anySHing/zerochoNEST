@@ -24,11 +24,10 @@ export class Channels {
   @Column('varchar', { name: 'name', length: 30 })
   name: string;
 
-  @Column('smallint', {
+  @Column('boolean', {
     name: 'private',
     nullable: true,
-    width: 1,
-    default: () => "'0'",
+    default: false,
   })
   private: boolean | null;
 

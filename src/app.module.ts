@@ -17,6 +17,8 @@ import { Mentions } from './entities/Mentions';
 import { Users } from './entities/Users';
 import { WorkspaceMembers } from './entities/WorkspaceMembers';
 import { Workspaces } from './entities/Workspaces';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   // forRoot, forFeature, register 등등이 붙는 것들은 파라미터 내부에 설정을 넣어주는 것이라고 보면 됨.
@@ -24,7 +26,10 @@ import { Workspaces } from './entities/Workspaces';
     ConfigModule.forRoot({
       isGlobal: true,
       /*,  load: getEnv */
-      envFilePath: '.env.development',
+      envFilePath:
+        process.env.NODE_ENV === 'production'
+          ? '.env.production'
+          : '.env.development',
     }),
     UsersModule,
     WorkspacesModule,
@@ -48,13 +53,15 @@ import { Workspaces } from './entities/Workspaces';
         Workspaces,
       ],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
     }),
+    TypeOrmModule.forFeature([Users]),
+    AuthModule,
   ], // load 옵션을 이용해서 나중에 AWS의 환경변수 저장소에서 가져오게 되는 경우도 해결할 수 있음
   controllers: [AppController],
   // process.env를 사용할 것이 아닌 configServicew를 이용해서 환경변수를 가져온다.
-  providers: [AppService, ConfigService, UsersService],
+  providers: [AppService, ConfigService, UsersService, AuthService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
