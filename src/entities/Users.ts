@@ -40,7 +40,7 @@ export class Users {
   nickname: string;
 
   @IsString()
-  @IsNotEmpty() 
+  @IsNotEmpty()
   @Column('varchar', { name: 'password', length: 100, select: false })
   password: string;
 

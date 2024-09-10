@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './http-exceptionfilter';
 import { ValidationPipe } from '@nestjs/common';
+import passport from 'passport';
 
 declare const module: any;
 
@@ -23,6 +24,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
 
+  app.use(passport.initialize());
+  app.use(passport.session());
   await app.listen(port);
   console.log(`listening on PORT: ${port}`);
 

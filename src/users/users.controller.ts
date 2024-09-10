@@ -15,6 +15,8 @@ import { User } from 'src/common/decorators/user.decorator';
 import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { Users } from 'src/entities/Users';
+import { LoggedInGuard } from 'src/auth/logged-in.guard';
+import { Response } from 'express';
 
 // /users
 @UseInterceptors(UndefinedToNullInterceptor)
@@ -35,7 +37,7 @@ export class UsersController {
   @ApiOperation({ summary: '내 정보 조회' })
   @Get()
   getUsers(@User() user: Users) {
-    return user;
+    return user || false;
   }
 
   @ApiOperation({ summary: '회원가입' })
@@ -62,8 +64,8 @@ export class UsersController {
   @ApiOperation({ summary: '로그아웃' })
   @Post('logout')
   @UseGuards(LoggedInGuard)
-  logOut(@Res() res) {
+  logOut(@Res() res: Response) {
     res.clearCookie('connect.sid', { httpOnly: true });
-    return res.send * 'ok';
+    return res.send('ok');
   }
 }
