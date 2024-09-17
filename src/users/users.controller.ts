@@ -6,6 +6,7 @@ import {
   UseGuards,
   UseInterceptors,
   Res,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
@@ -17,6 +18,8 @@ import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { Users } from 'src/entities/Users';
 import { LoggedInGuard } from 'src/auth/logged-in.guard';
 import { Response } from 'express';
+import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
+import { ForbiddenTransactionModeOverrideError } from 'typeorm';
 
 // /users
 @UseInterceptors(UndefinedToNullInterceptor)
@@ -36,14 +39,25 @@ export class UsersController {
   })
   @ApiOperation({ summary: '내 정보 조회' })
   @Get()
-  getUsers(@User() user: Users) {
+  getProfile(@User() user: Users) {
     return user || false;
   }
 
   @ApiOperation({ summary: '회원가입' })
+  @UseGuards(NotLoggedInGuard)
   @Post()
-  join(@Body() body: JoinRequestDto) {
-    this.usersService.join(body.email, body.nickname, body.password);
+  async join(@Body() data: JoinRequestDto) {
+    const result = await this.usersService.join(
+      data.email,
+      data.nickname,
+      data.password,
+    );
+
+    if (!result) {
+      throw new ForbiddenException();
+    }
+
+    return 'ok';
   }
 
   // users/login

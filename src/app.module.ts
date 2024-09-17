@@ -19,10 +19,18 @@ import { WorkspaceMembers } from './entities/WorkspaceMembers';
 import { Workspaces } from './entities/Workspaces';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import path from 'path';
 
 @Module({
   // forRoot, forFeature, register 등등이 붙는 것들은 파라미터 내부에 설정을 넣어주는 것이라고 보면 됨.
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath:
+        process.env.NODE_ENV === 'production'
+          ? path.join(__dirname, '..', '..', 'uploads')
+          : path.join(__dirname, '..', 'uploads'),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       /*,  load: getEnv */

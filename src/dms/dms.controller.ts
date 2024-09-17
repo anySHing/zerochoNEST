@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { DmsService } from './dms.service';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { User } from 'src/common/decorators/user.decorator';
+import { Users } from 'src/entities/Users';
 
 @ApiParam({
   name: 'url',
@@ -22,10 +24,17 @@ export class DmsController {
     description: '불러올 페이지',
   })
   @Get(':id/chats')
-  getChat(@Query('perPage') perPage, @Query('page') page) {
+  getChat(@Query('perPage') perPage: number, @Query('page') page: number) {
     console.log(perPage, page);
   }
 
   @Post(':id/chats')
-  postChat(@Body() body) {}
+  async createWorkspaceDMChats(
+    @Param('url') url: string,
+    @Param('id') id: number,
+    @Body('content') content: any,
+    @User() user: Users,
+  ) {
+    return this.dmsService.createWorkspaceDMChats(url, content, id, user.id);
+  }
 }
